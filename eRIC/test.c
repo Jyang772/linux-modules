@@ -77,8 +77,31 @@ int main()
    
     usleep(100000); 
 
+    //TODO: WRITE BETTER DEBUG
+    //REMOVE WHILE LOOP
+    while(1) {
+    /* simple output */
+    wlen = write(fd, "ER_CMD#T7", 9);
+    if (wlen != 9) {
+        printf("Error from write: %d, %d\n", wlen, errno);
+    }
+
+    tcdrain(fd);
+    usleep(100000);
+    usleep(2); //required to make flush work, for some reason
+    tcflush(fd,TCIOFLUSH);
+	
+    wlen = write(fd, "ACK", 3);
+    if (wlen != 3) {
+        printf("Error from write: %d, %d\n", wlen, errno);
+    }
+
+    tcdrain(fd);
+   
+    usleep(100000);
+
     /* simple noncanonical input */
-    do {
+    //do {
         unsigned char buf[80];
         int rdlen;
 
@@ -98,5 +121,6 @@ int main()
             printf("Error from read: %d: %s\n", rdlen, strerror(errno));
         }
         /* repeat read to get full message */
-    } while (1);
+    //} while (1);
+    }
 }
