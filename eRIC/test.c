@@ -110,6 +110,10 @@ int main()
 #ifdef DISPLAY_STRING
             buf[rdlen] = 0;
             printf("Read %d: \"%s\"\n", rdlen, buf);
+	    buf[rdlen] = '\n';
+	    write(fd,buf,rdlen+1);
+	    tcdrain(fd);
+	    usleep(50000);
 #else /* display hex */
             unsigned char   *p;
             printf("Read %d:", rdlen);
