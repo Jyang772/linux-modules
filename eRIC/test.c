@@ -87,7 +87,7 @@ int main()
     }
 
     tcdrain(fd);
-    usleep(100000);
+    usleep(800000);
     usleep(2); //required to make flush work, for some reason
     tcflush(fd,TCIOFLUSH);
 	
@@ -107,20 +107,25 @@ int main()
 
         rdlen = read(fd, buf, sizeof(buf) - 1);
         if (rdlen > 0) {
-#ifdef DISPLAY_STRING
-            buf[rdlen] = 0;
+	/*	
+	    buf[rdlen] = 0;
             printf("Read %d: \"%s\"\n", rdlen, buf);
 	    buf[rdlen] = '\n';
 	    write(fd,buf,rdlen+1);
 	    tcdrain(fd);
 	    usleep(50000);
-#else /* display hex */
-            unsigned char   *p;
-            printf("Read %d:", rdlen);
-            for (p = buf; rdlen-- > 0; p++)
-                printf(" 0x%x", *p);
-            printf("\n");
-#endif
+	    */
+
+		//eRIC includes null terminator in temp reply		
+		//replace null terminator with newline
+		//add null terminator
+		buf[rdlen-1] = '\n';
+		buf[rdlen] = 0;
+		printf("Read %d: \"%s",rdlen,buf);
+		fflush(stdout);
+		write(fd,buf,rdlen);
+		tcdrain(fd);
+		usleep(50000);
         } else if (rdlen < 0) {
             printf("Error from read: %d: %s\n", rdlen, strerror(errno));
         }
