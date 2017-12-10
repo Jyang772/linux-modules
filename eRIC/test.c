@@ -119,10 +119,11 @@ int main()
 		//eRIC includes null terminator in temp reply		
 		//replace null terminator with newline
 		//add null terminator
+		//buf[rdlen-1] = '\n';
+		//buf[rdlen] = 0;
+		printf("Read %d: \"%s\"\n",rdlen,buf);
 		buf[rdlen-1] = '\n';
 		buf[rdlen] = 0;
-		printf("Read %d: \"%s",rdlen,buf);
-		fflush(stdout);
 		write(fd,buf,rdlen);
 		tcdrain(fd);
 		usleep(50000);
