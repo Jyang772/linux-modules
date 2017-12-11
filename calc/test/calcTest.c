@@ -19,7 +19,7 @@ int main()
 	}
 
 	while(1) {
-		printf("\n 1.Add\n2.Exit\nEnter:");
+		printf("\n 1.Add\n 2.Subtract\n 5.Exit\nEnter:");
 		scanf("%d",&opt);
 
 		if(opt == 5)
@@ -35,6 +35,9 @@ int main()
 		{
 			case 1:
 				ioctl(fd, SAMPLE_IOCTL_ADD, &pingu);
+				break;
+			case 2:
+				ioctl(fd, SAMPLE_IOCTL_SUBTRACT, &pingu);
 				break;
 		}
 

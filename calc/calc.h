@@ -11,3 +11,4 @@ struct calc
 
 #define SAMPLE_MAGIC 's'
 #define SAMPLE_IOCTL_ADD	_IOWR(SAMPLE_MAGIC, 0x01, struct calc)
+#define SAMPLE_IOCTL_SUBTRACT	_IOWR(SAMPLE_MAGIC, 0x02, struct calc)

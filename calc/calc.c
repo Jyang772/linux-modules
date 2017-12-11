@@ -82,6 +82,19 @@ static long sample_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 				printk("Kernel Added.\n");
 				return 0;
 			}
+		case SAMPLE_IOCTL_SUBTRACT:
+			{
+				struct calc subtraction;
+				memset(&subtraction, 0, sizeof(struct calc));
+				
+				if(copy_from_user(&subtraction, (struct calc*)arg, sizeof(struct calc)))
+					return -EFAULT;
+				subtraction.result = subtraction.num1 - subtraction.num2;
+				if(copy_to_user((struct calc*)arg, &subtraction, sizeof(struct calc)))
+					return -EFAULT;
+				printk("Kernel Subtracted.\n");
+				return 0;
+			}
 
 		default:
 			return -EFAULT;
