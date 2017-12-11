@@ -45,7 +45,7 @@ int set_interface_attribs(int fd, int speed)
 
 int main()
 {
-    char *portname = "/dev/ttyUSB0";
+    char *portname = "/dev/ttyUSB1";
     int fd;
     int wlen;
 
