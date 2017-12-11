@@ -45,7 +45,7 @@ int set_interface_attribs(int fd, int speed)
 
 int main()
 {
-    char *portname = "/dev/ttyUSB0";
+    char *portname = "/dev/ttyUSB1";
     int fd;
     int wlen;
 
@@ -57,80 +57,55 @@ int main()
     /*baudrate 115200, 8 bits, no parity, 1 stop bit */
     set_interface_attribs(fd, B19200);
 
-    /* simple output */
-    wlen = write(fd, "ER_CMD#T7", 9);
-    if (wlen != 9) {
-        printf("Error from write: %d, %d\n", wlen, errno);
-    }
-
-    tcdrain(fd);
-    usleep(100000);
-    usleep(2); //required to make flush work, for some reason
-    tcflush(fd,TCIOFLUSH);
-	
-    wlen = write(fd, "ACK", 3);
-    if (wlen != 3) {
-        printf("Error from write: %d, %d\n", wlen, errno);
-    }
-
-    tcdrain(fd);
-   
-    usleep(100000); 
-
     //TODO: WRITE BETTER DEBUG
     //REMOVE WHILE LOOP
     while(1) {
-    /* simple output */
-    wlen = write(fd, "ER_CMD#T7", 9);
-    if (wlen != 9) {
-        printf("Error from write: %d, %d\n", wlen, errno);
-    }
-
-    tcdrain(fd);
-    usleep(800000);
-    //usleep(2); //required to make flush work, for some reason
-    tcflush(fd,TCIOFLUSH);
-	
-    wlen = write(fd, "ACK", 3);
-    if (wlen != 3) {
-        printf("Error from write: %d, %d\n", wlen, errno);
-    }
-
-    tcdrain(fd);
-   
-    usleep(100000);
-
-    /* simple noncanonical input */
-    //do {
         unsigned char buf[80];
         int rdlen;
 
         rdlen = read(fd, buf, sizeof(buf) - 1);
         if (rdlen > 0) {
-	/*	
-	    buf[rdlen] = 0;
-            printf("Read %d: \"%s\"\n", rdlen, buf);
-	    buf[rdlen] = '\n';
-	    write(fd,buf,rdlen+1);
-	    tcdrain(fd);
-	    usleep(50000);
-	    */
-
-		//eRIC includes null terminator in temp reply		
-		//replace null terminator with newline
-		//add null terminator
-		//buf[rdlen-1] = '\n';
-		//buf[rdlen] = 0;
-		printf("Read %d: \"%s\"\n",rdlen,buf);
-		buf[rdlen-1] = '\n';
+		
 		buf[rdlen] = 0;
-		write(fd,buf,rdlen);
-		tcdrain(fd);
-		usleep(50000);
-        } else if (rdlen < 0) {
-            printf("Error from read: %d: %s\n", rdlen, strerror(errno));
-        }
-        /* repeat read to get full message */
-    //} while (1);
-    }
+		printf("Read %d: \"%s\"\n",rdlen, buf);
+
+		if(strcmp("getTemp",buf) == 0) {
+			printf("Inside\n");
+			printf("getTemp\n");
+
+			//Send appropriate command to local device
+			//Read back output
+			//Send output back to client
+			wlen = write(fd, "ER_CMD#T7", 9);
+			if (wlen != 9) {
+				printf("Error from write: %d, %d\n", wlen, errno);
+			}
+			tcdrain(fd);
+			usleep(800000);
+			tcflush(fd, TCIOFLUSH);
+			wlen = write(fd, "ACK", 3);
+			if (wlen != 3) {
+				printf("Error from write: %d, %d\n", wlen, errno);
+			}
+		
+			//readReply(fd, buf);	
+
+			int fPolling = 1;
+			while(fPolling) {
+				rdlen = read(fd, buf, sizeof(buf) - 1);
+				if(rdlen > 0) {
+					printf("Read_ %d: \"%s\"\n",rdlen, buf);
+					buf[rdlen-1] = '\n';
+					buf[rdlen] = 0;
+					write(fd, buf, rdlen);
+					tcdrain(fd);
+					usleep(50000);
+					fPolling = 0;
+				} else if (rdlen < 0) {
+					printf("Error from read: %d: %s\n", rdlen, strerror(errno));
+				}
+			}
+		}
+    		}
+	}
 }
