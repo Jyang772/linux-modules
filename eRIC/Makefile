@@ -1,9 +1,13 @@
 CC=gcc
+objects = test receive
 
-all: ericTest.o
-	$(CC) ericTest.c -o calcTest
-	sudo chown root ericTest
-	sudo chmod u+s ericTest
+all: $(objects)
+
+$(objects): %: %.c
+	$(CC) -o $@ $< 
+
+#sudo chown root ericTest
+#sudo chmod u+s ericTest
 
 clean:
-	rm *.o ericTest
+	rm receive test
