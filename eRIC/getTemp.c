@@ -1,3 +1,5 @@
+#include "readLine.h"
+
 #include <errno.h>
 #include <fcntl.h> 
 #include <stdio.h>
@@ -7,7 +9,7 @@
 #include <unistd.h>
 #include <time.h>
 
-void readReply(int, char**);
+void readReply(int, char*);
 
 int set_interface_attribs(int fd, int speed)
 {
@@ -75,14 +77,15 @@ int main()
 				if(wlen != 7) {
 					printf("Error from write: %d, %d\n", wlen, errno);
 				}
-				readReply(fd,buf);
+				tcdrain(fd);
+				while(readLine(fd, buf, sizeof(buf)) == 0);
 			}
 		}
-		printf("READ: %s",buf);
+		printf("READ: %s\n",buf);
 	}
 }
 
-void readReply(int fd, char **buf) {
+void readReply(int fd, char *buf) {
 
 	int rdlen = 0;
 	while(1) {
