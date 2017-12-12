@@ -70,13 +70,16 @@ int main()
 	//TODO: WRITE BETTER DEBUG
 	//REMOVE WHILE LOOP
 	while(1) {
-		usleep(80000);
+		//usleep(80000);
 		unsigned char buf[80];
 		int rdlen;
 
 		//rdlen = read(fd, buf, sizeof(buf) - 1);
 		rdlen = readLine(fd, buf, sizeof(buf));
 		//rdlen = readReply(fd, buf);
+		printf("Command read: %s\n",buf);
+		usleep(1);
+		tcflush(fd, TCIOFLUSH);
 		
 		if (rdlen > 0) {
 
@@ -105,12 +108,12 @@ int main()
 				usleep(50000); //Wait for device to send out temp.
 				readLine(fd, buf, 80);
 				buf[strlen(buf)] = '\n';
-				/*printf("strlen: %d\n",strlen(buf));
+				printf("strlen: %d\n",strlen(buf));
 				buf[strlen(buf)]='\n';
 				buf[strlen(buf)+1] = 0;
 				printf("SENDING: %s",buf);
 				printf("strlen: %d\n",strlen(buf));
-				*/
+				
 				write(fd, buf, strlen(buf)+1);
 				tcdrain(fd);
 				usleep(50000);

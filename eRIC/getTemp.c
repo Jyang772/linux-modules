@@ -66,7 +66,7 @@ int main()
         unsigned char buf[80];	
 	
 	while(1) {
-		printf("\n 1. getTemp\n 2.Exit\n"); 
+		printf(" 1. getTemp\n 2.Exit\n"); 
 		scanf("%d",&opt);	
 		if(opt == 2)
 			break;
@@ -78,10 +78,11 @@ int main()
 					printf("Error from write: %d, %d\n", wlen, errno);
 				}
 				tcdrain(fd);
-				while(readLine(fd, buf, sizeof(buf)) == 0);
+				//while(readLine(fd, buf, sizeof(buf)) == 0);
+				readLine(fd, buf, sizeof(buf));
 			}
 		}
-		printf("READ: %s\n",buf);
+		printf("READ: %s",buf);
 	}
 }
 
