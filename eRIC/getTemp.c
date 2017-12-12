@@ -73,8 +73,8 @@ int main()
 		switch(opt) {
 			case 1: 
 			{
-				wlen = write(fd, "getTemp",7);
-				if(wlen != 7) {
+				wlen = write(fd, "getTemp\0",8);
+				if(wlen != 8) {
 					printf("Error from write: %d, %d\n", wlen, errno);
 				}
 				tcdrain(fd);

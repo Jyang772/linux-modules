@@ -9,8 +9,11 @@
 #include <unistd.h>
 #include <time.h>
 #include <sys/ioctl.h>
+#include <sys/poll.h>
 
-void readReply(int, char*);
+struct pollfd fds[1];
+
+int readReply(int, char*);
 
 int set_interface_attribs(int fd, int speed)
 {
@@ -61,21 +64,20 @@ int main()
 	}
 	/*baudrate 115200, 8 bits, no parity, 1 stop bit */
 	set_interface_attribs(fd, B19200);
+	fds[0].fd = fd;
+	fds[0].events = POLLIN;
 
 	//TODO: WRITE BETTER DEBUG
 	//REMOVE WHILE LOOP
 	while(1) {
+		usleep(80000);
 		unsigned char buf[80];
 		int rdlen;
 
 		//rdlen = read(fd, buf, sizeof(buf) - 1);
-		//rdlen = readLine(fd, buf, sizeof(buf));
-		int len = 0;
-		ioctl(fd, FIONREAD, &len);
-		if (len > 0) {
-		  len = read(fd, buf, len);
-		}
-		rdlen = len;
+		rdlen = readLine(fd, buf, sizeof(buf));
+		//rdlen = readReply(fd, buf);
+		
 		if (rdlen > 0) {
 
 			buf[rdlen] = 0;
@@ -103,7 +105,13 @@ int main()
 				usleep(50000); //Wait for device to send out temp.
 				readLine(fd, buf, 80);
 				buf[strlen(buf)] = '\n';
-				write(fd, buf, strlen(buf));
+				/*printf("strlen: %d\n",strlen(buf));
+				buf[strlen(buf)]='\n';
+				buf[strlen(buf)+1] = 0;
+				printf("SENDING: %s",buf);
+				printf("strlen: %d\n",strlen(buf));
+				*/
+				write(fd, buf, strlen(buf)+1);
 				tcdrain(fd);
 				usleep(50000);
 			}
@@ -112,7 +120,7 @@ int main()
 }
 
 
-void readReply(int fd, char* buf) {
+int readReply(int fd, char* buf) {
 	int rdlen = 0;	
 	unsigned char readIn[80];
 
@@ -125,8 +133,8 @@ void readReply(int fd, char* buf) {
 		rdlen = read(fd, readIn, sizeof(readIn)-1);
 		if(rdlen > 0) {
 			printf("Read_ %d: \"%s\"\n",rdlen, readIn);
-			printf("%x\n",readIn[rdlen]);
-			if(readIn[rdlen] == 0) {
+			printf("%x\n",readIn[rdlen-1]);
+			if(readIn[rdlen-1] == 0) {
 				done = 1;
 				printf("DONE");
 			}
@@ -137,9 +145,10 @@ void readReply(int fd, char* buf) {
 		}
 	}
 
-	buf[strlen(buf)] = '\n';
+	buf[strlen(buf)] = 0;
 	printf("Sending: %s",buf);
-	return;
+
+	return strlen(buf);
 
 
 }
