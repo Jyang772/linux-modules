@@ -117,7 +117,6 @@ int main()
 
 				usleep(50000); //Wait for device to send out temp.
 				readLine(fd, buf, 80);
-				buf[strlen(buf)] = '\n';
 				printf("strlen: %d\n",strlen(buf));
 				buf[strlen(buf)]='\n';
 				buf[strlen(buf)+1] = 0;
