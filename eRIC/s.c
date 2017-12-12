@@ -66,8 +66,8 @@ int main()
         unsigned char buf[80];	
 	
 	while(1) {
-				wlen = write(fd, "getTemp\0",8);
-				if(wlen != 8) {
+				wlen = write(fd, "*getTemp\0",9);
+				if(wlen != 9) {
 					printf("Error from write: %d, %d\n", wlen, errno);
 				}
 				tcdrain(fd);

@@ -74,12 +74,22 @@ int main()
 		unsigned char buf[80];
 		int rdlen;
 
+		    char ch = 0;
+		    while(ch != '*') {
+			    read(fd,&ch,1);
+		    };
+		    printf("NEXT\n");
+		    if(ch == '*') {
+			rdlen = readLine(fd,buf,sizeof(buf));
+			printf("Command read: %s\n",buf);
+		    }
+		    else {
+			  continue;
+	    	    }
 		//rdlen = read(fd, buf, sizeof(buf) - 1);
-		rdlen = readLine(fd, buf, sizeof(buf));
+		//rdlen = readLine(fd, buf, sizeof(buf));
 		//rdlen = readReply(fd, buf);
-		printf("Command read: %s\n",buf);
-		usleep(1);
-		tcflush(fd, TCIOFLUSH);
+		//printf("Command read: %s\n",buf);
 		
 		if (rdlen > 0) {
 
@@ -117,6 +127,11 @@ int main()
 				write(fd, buf, strlen(buf)+1);
 				tcdrain(fd);
 				usleep(50000);
+			}
+			else {
+				printf("ERROR\n");
+				usleep(4000);
+				tcflush(fd, TCIOFLUSH);
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 #include <unistd.h>
+#include <termios.h>
 #include <errno.h>
+#include <stdio.h>
 
 /* Read characters from 'fd' until a newline is encountered. If a newline
   character is not encountered in the first (n - 1) bytes, then the excess
@@ -25,10 +27,25 @@ readLine(int fd, void *buffer, size_t n)
     buf = buffer;                       /* No pointer arithmetic on "void *" */
 
     totRead = 0;
+    
+    //Check magic number
+    //
+   /* 
+    if(read(fd, &ch, 1) > 0) {
+	    if(ch == '*') {
+		    *buf++ = ch;
+		    totRead++;
+		    printf("YES");
+	    }
+	    else
+		 return 0;
+    }
+ */ 
+
     for (;;) {
         numRead = read(fd, &ch, 1);
-	if(numRead > 0) {
 
+	if(numRead > 0) {
         if (numRead == -1) {
             if (errno == EINTR)         /* Interrupted --> restart read() */
                 continue;
