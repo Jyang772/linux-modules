@@ -1,0 +1,8 @@
+Comment out rl_prep_term_function and rl_derep_term_function. 
+These functions set readline's terminal settings. 
+
+rl_deprep_term_function --> rl_deprep_terminal resets the "old" terminal settings that were changed by readline. 
+Modified to restore ISIG, which is disabled by enableRawMode(). 
+
+
+Disable ISIG if you want your program to process special characters. (CTRL+C, CTRL+Z)

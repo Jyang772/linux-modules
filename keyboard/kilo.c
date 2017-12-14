@@ -29,7 +29,7 @@ void enableRawMode() {
   raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
   raw.c_oflag &= ~(OPOST);
   raw.c_cflag |= (CS8);
-  //raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
+  raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
   raw.c_lflag &= ISIG;
   raw.c_cc[VMIN] = 0;
   raw.c_cc[VTIME] = 1;
@@ -40,7 +40,7 @@ void enableRawMode() {
 int keyPressed(int count, int key) {
 
 	printf("key pressed: %d\n",key);
-	rl_on_new_line();
+	//rl_on_new_line();
 	return 0;
 }
 
@@ -48,15 +48,22 @@ int keyPressed(int count, int key) {
 
 int main(void) {
 	rl_catch_signals = 0; //Don't let readline install signal handlers. 
+
 	rl_bind_keyseq("\\C-a",keyPressed);
 	rl_bind_keyseq("\\C-g",keyPressed);
 	rl_bind_keyseq("\\C-p",keyPressed);
 	rl_bind_keyseq("\\C-z",keyPressed);
+	
 	//signal(SIGTSTP,keyPressed);
-	rl_clear_signals();
-
+	enableRawMode();
 	while(1) {
 		char *line = readline("rl> ");
+		/*
+		char c = 0;
+		read(STDIN_FILENO, &c, 1);
+		if(c == 'q') {
+			break;
+		}*/
 	}
 
 /* 
