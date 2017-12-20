@@ -9,8 +9,6 @@
 #include <unistd.h>
 #include <time.h>
 
-void readReply(int, char*);
-
 int set_interface_attribs(int fd, int speed)
 {
     struct termios tty;
@@ -86,19 +84,3 @@ int main()
 	}
 }
 
-void readReply(int fd, char *buf) {
-
-	int rdlen = 0;
-	while(1) {
-		rdlen = read(fd, buf, sizeof(buf) - 1);
-		if(rdlen > 0) {
-			buf[rdlen] = 0;
-			printf("%s",buf);
-		}
-		else if(rdlen < 0) {
-			printf("Error from read: %d: %s\n", rdlen, strerror(errno));
-		}
-	}
-
-	return;	
-}
