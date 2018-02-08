@@ -1,0 +1,3 @@
+gcc server.c readLine.c -o server
+
+gcc s.c readLine.c -o s
