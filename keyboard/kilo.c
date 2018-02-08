@@ -55,15 +55,16 @@ int main(void) {
 	rl_bind_keyseq("\\C-z",keyPressed);
 	
 	//signal(SIGTSTP,keyPressed);
-	enableRawMode();
+	//enableRawMode();
 	while(1) {
 		char *line = readline("rl> ");
-		/*
+	/*	
 		char c = 0;
 		read(STDIN_FILENO, &c, 1);
 		if(c == 'q') {
 			break;
-		}*/
+		}
+	*/
 	}
 
 /* 

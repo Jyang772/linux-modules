@@ -6,3 +6,17 @@ Modified to restore ISIG, which is disabled by enableRawMode().
 
 
 Disable ISIG if you want your program to process special characters. (CTRL+C, CTRL+Z)
+
+
+
+
+To modify and install readline:
+1. Download source from GNU Readline (readline-7.0)
+2. sudo ./configure ; sudo make ; sudo make install
+3. When compiling program (kilo.c), use -lncurses
+
+
+To recover:
+1. Download source mirror from AUR
+2. makepkg from directory with PKGBUILD
+3. sudo pacman -U readline-7.0.003-1-x86_64.pkg.tar.xz
