@@ -13,8 +13,9 @@ Disable ISIG if you want your program to process special characters. (CTRL+C, CT
 To modify and install readline:
 1. Download source from GNU Readline (readline-7.0)
 2. sudo ./configure ; sudo make ; sudo make install
-3. When compiling program (kilo.c), use -lncurses
-4. Modify where HANDLE_SIGNALS is checked in #ifdef statement. This is where ISIG is used.
+3. Move libreadline.so.7 from /usr/lib/local to /usr/lib
+4. When compiling program (kilo.c), use -lncurses
+5. Modify where HANDLE_SIGNALS is checked in #ifdef statement. This is where ISIG is used.
 
 
 To recover:
